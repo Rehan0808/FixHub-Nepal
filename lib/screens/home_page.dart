@@ -12,47 +12,152 @@ class _HomePageState extends State<HomePage> {
   bool _showedWelcome = false;
 
   static const Color brandRed = Color(0xFFD32F2F);
+  static const Color brandRedDark = Color(0xFFB71C1C);
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_showedWelcome) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Welcome to Fixhub Nepal')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Welcome to FixHub Nepal'),
+            backgroundColor: brandRed,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
         _showedWelcome = true;
       }
     });
   }
 
-  Widget serviceCard({required IconData leadingIcon, required String title, required String subtitle, required VoidCallback onTap}) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 0,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
-          child: Row(
-            children: [
-              Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(color: brandRed.withOpacity(0.95), borderRadius: BorderRadius.circular(10)),
-                child: Icon(leadingIcon, color: Colors.white, size: 26),
+  // ================= HERO BANNER =================
+  Widget _buildHeroBanner() {
+    return Container(
+      margin: const EdgeInsets.all(20),
+      height: 190,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/hero.png'),
+          fit: BoxFit.cover,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(26),
+          gradient: LinearGradient(
+            colors: [
+              Colors.black.withOpacity(0.65),
+              Colors.transparent,
+            ],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'Vehicle Problems?',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(width: 12),
-              Expanded(
+            ),
+            SizedBox(height: 6),
+            Text(
+              'FixHub brings mechanics to your doorstep',
+              style: TextStyle(color: Colors.white70),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ================= FULL IMAGE SERVICE CARD =================
+  Widget serviceCard({
+    required String imagePath,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      height: 150,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 14,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        borderRadius: BorderRadius.circular(24),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withOpacity(0.7),
+                      Colors.black.withOpacity(0.25),
+                    ],
+                    begin: Alignment.bottomLeft,
+                    end: Alignment.topRight,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(18),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                     const SizedBox(height: 6),
-                    Text(subtitle, style: const TextStyle(fontSize: 13, color: Colors.grey)),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              // (no trailing icon — card itself is tappable)
             ],
           ),
         ),
@@ -60,95 +165,143 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // ================= HOME CONTENT =================
   Widget _buildHomeContent() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header card
+          // HEADER
           Container(
-            width: double.infinity,
-            decoration: BoxDecoration(color: brandRed, borderRadius: BorderRadius.circular(6)),
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Welcome, Rehan!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18)),
-                SizedBox(height: 8),
-                Text('Kathmandu, Nepal', style: TextStyle(color: Colors.white70)),
-                SizedBox(height: 6),
-                Text('Your trusted wheeler service partner', style: TextStyle(color: Colors.white70, fontSize: 13)),
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [brandRed, brandRedDark],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'Hello, Rehan! 👋',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on,
+                            color: Colors.white70, size: 16),
+                        SizedBox(width: 4),
+                        Text(
+                          'Kathmandu, Nepal',
+                          style:
+                              TextStyle(color: Colors.white70, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.notifications_outlined,
+                      color: Colors.white),
+                ),
               ],
             ),
           ),
 
-          const SizedBox(height: 18),
+          // HERO (kept)
+          _buildHeroBanner(),
 
-          const Text('What can we help you with?', style: TextStyle(fontWeight: FontWeight.w700)),
-          const SizedBox(height: 12),
+          const SizedBox(height: 24),
 
-          serviceCard(
-            leadingIcon: Icons.build,
-            title: 'Routine Service',
-            subtitle: 'Regular bike & scooter maintenance',
-            onTap: () {},
+          // SERVICES
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: const Text(
+              'Our Services',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
-          serviceCard(
-            leadingIcon: Icons.flash_on,
-            title: 'Emergency Repair',
-            subtitle: 'Urgent two-wheeler repair within 2 hours',
-            onTap: () {},
-          ),
-          serviceCard(
-            leadingIcon: Icons.local_shipping,
-            title: 'Pick & Drop Service',
-            subtitle: 'We pick up, service, and drop your bike',
-            onTap: () {},
-          ),
+          const SizedBox(height: 16),
 
-          // testimonials removed per request
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                serviceCard(
+                  imagePath: 'assets/images/routine.png',
+                  title: 'Routine Service',
+                  subtitle: 'Regular bike & scooter maintenance',
+                  onTap: () {},
+                ),
+                serviceCard(
+                  imagePath: 'assets/images/emergency.png',
+                  title: 'Emergency Repair',
+                  subtitle: 'Urgent repair within 2 hours',
+                  onTap: () {},
+                ),
+                serviceCard(
+                  imagePath: 'assets/images/pickup.png',
+                  title: 'Pick & Drop Service',
+                  subtitle: 'We pick, service & drop your bike',
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildBody() {
-    switch (_currentIndex) {
-      case 0:
-        return _buildHomeContent();
-      case 1:
-        return const Center(child: Padding(padding: EdgeInsets.all(24.0), child: Text('Bookings', style: TextStyle(fontSize: 18))));
-      case 2:
-        return const Center(child: Padding(padding: EdgeInsets.all(24.0), child: Text('Tracking', style: TextStyle(fontSize: 18))));
-      case 3:
-        return const Center(child: Padding(padding: EdgeInsets.all(24.0), child: Text('Profile', style: TextStyle(fontSize: 18))));
-      default:
-        return _buildHomeContent();
-    }
+  Widget _buildSimplePage(String text) {
+    return Center(
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 18, color: Colors.grey),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F3F3),
-      appBar: AppBar(
-        backgroundColor: brandRed,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: const Text('Home'),
-      ),
-      body: _buildBody(),
+      backgroundColor: const Color(0xFFF8F9FA),
+      body: [
+        _buildHomeContent(),
+        _buildSimplePage('No Bookings Yet'),
+        _buildSimplePage('No Active Tracking'),
+        _buildSimplePage('Profile Coming Soon'),
+      ][_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: brandRed,
         unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
         onTap: (i) => setState(() => _currentIndex = i),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Bookings'),
-          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Tracking'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded), label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today_rounded), label: 'Bookings'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.location_on_rounded), label: 'Tracking'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person_rounded), label: 'Profile'),
         ],
       ),
     );

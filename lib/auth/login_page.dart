@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 18),
 
-                    /// SIGN IN BUTTON
+                    //SIGN IN BUTTON
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
