@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import '../theme/theme_data.dart';
 import 'bottom_screens/home_screen.dart';
-// import 'bottom_screens/bookings_screen.dart';
-// import 'bottom_screens/tracking_screen.dart';
-// import 'bottom_screens/profile_screen.dart';
+import 'bottom_screens/bookings_screen.dart';
+import 'bottom_screens/tracking_screen.dart';
+import 'bottom_screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -19,9 +19,9 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = const [
     HomeScreen(),
-    // BookingsScreen(),
-    // TrackingScreen(),
-    // ProfileScreen(),
+    BookingsScreen(),
+    TrackingScreen(),
+    ProfileScreen(),
   ];
 
   @override
