@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fixhub_nepal/splash/splash_page.dart';
 import 'package:fixhub_nepal/onboarding/on_boarding1.dart';
 import 'package:fixhub_nepal/auth/login_page.dart';
-import 'package:fixhub_nepal/screens/home_page.dart';
+import 'package:fixhub_nepal/screens/bottom_screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/onboarding': (context) => const Onboarding1(),
         '/login': (context) => const LoginPage(),
-        '/home': (context) => const HomePage(),
+        '/home': (context) => const HomeScreen(),
       },
     );
   }

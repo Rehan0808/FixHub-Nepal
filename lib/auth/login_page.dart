@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/home_page.dart';
+import '../screens/bottom_screens/home_screen.dart';
 import 'signup_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -205,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                                builder: (_) => const HomePage()),
+                                builder: (_) => const HomeScreen()),
                           );
                         },
                         style: ElevatedButton.styleFrom(
