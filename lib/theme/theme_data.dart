@@ -1,4 +1,4 @@
-// lib/theme/theme_data.dart
+
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -8,6 +8,7 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     primaryColor: brandRed,
     scaffoldBackgroundColor: const Color(0xFFF8F9FA),
+    fontFamily: 'Poppins', // apply globally
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: brandRed,
       unselectedItemColor: Colors.grey,
