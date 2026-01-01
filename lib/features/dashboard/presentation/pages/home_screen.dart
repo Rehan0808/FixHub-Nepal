@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../theme/theme_data.dart';
+import '../../../../theme/theme_data.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  // ================= HERO BANNER (FULL WIDTH) =================
+  
   Widget _buildHeroBanner(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -61,7 +61,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // ================= SERVICE CARD =================
+ 
   Widget serviceCard({
     required String imagePath,
     required String title,
@@ -135,7 +135,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // ================= CUSTOMER REVIEW CARD =================
+  
   Widget _customerReviewCard({
     required String name,
     required String review,

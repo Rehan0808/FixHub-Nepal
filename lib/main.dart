@@ -1,7 +1,7 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'theme/theme_data.dart';
-import 'screens/main_screen.dart';
+import 'features/dashboard/presentation/pages/main_screen.dart';
 
 void main() {
   runApp(const FixHubApp());

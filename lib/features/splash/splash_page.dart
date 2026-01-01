@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../onboarding/on_boarding1.dart'; // import your first onboarding screen
+import '../onboarding/presentation/pages/on_boarding1.dart'; // import your first onboarding screen
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
