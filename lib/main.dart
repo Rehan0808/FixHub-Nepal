@@ -1,21 +1,26 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
-import 'theme/theme_data.dart';
-import 'features/dashboard/presentation/pages/main_screen.dart';
+import 'core/services/hive_services.dart';
+import 'features/splash/splash_page.dart'; // <-- splash page import
 
-void main() {
-  runApp(const FixHubApp());
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final hiveService = HiveService();
+  await hiveService.init(); // Initialize Hive and open boxes
+
+  runApp(const MyApp());
 }
 
-class FixHubApp extends StatelessWidget {
-  const FixHubApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      home: const MainScreen(),
+      home: SplashPage(), // <-- show splash first
     );
   }
 }
+
