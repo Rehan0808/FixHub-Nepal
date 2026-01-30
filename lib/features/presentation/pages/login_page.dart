@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-// import '../../dashboard/presentation/pages/home_screen.dart';
+import 'package:provider/provider.dart';
+
 import 'signup_page.dart';
-import '../../auth/domain/usecases/login_usecase.dart';
-import '../../auth/data/datasources/auth_hive_datasource.dart';
-import '../../auth/data/repositories/auth_repository_impl.dart';
-import '../../../core/services/hive_services.dart';
 import '../../dashboard/presentation/pages/main_screen.dart';
+import '../controllers/auth_controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,41 +17,26 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _rememberMe = false;
+  bool _isLoading = false;
 
   static const Color _brandRed = Color(0xFFD32F2F);
 
-  late LoginUseCase loginUseCase;
-
-  @override
-  void initState() {
-    super.initState();
-    final userBox = HiveService().userBox;
-    final dataSource = AuthHiveDataSource(userBox);
-    final repository = AuthRepositoryImpl(dataSource);
-    loginUseCase = LoginUseCase(repository);
-  }
-
   void _login() async {
+    final authController = context.read<AuthController>();
+
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     if (email.isEmpty || password.isEmpty) return;
 
-    final user = await loginUseCase.execute(email, password);
-    if (user != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MainScreen()),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Invalid email or password',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+    setState(() => _isLoading = true);
+
+    await authController.login(
+      context: context,
+      email: email,
+      password: password,
+    );
+
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -148,7 +131,8 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: InputDecoration(
                         hintText: 'you@example.com',
                         hintStyle: const TextStyle(color: Color(0xFFAAAAAA)),
-                        prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFFAAAAAA)),
+                        prefixIcon:
+                            const Icon(Icons.email_outlined, color: Color(0xFFAAAAAA)),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -173,10 +157,17 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: InputDecoration(
                         hintText: '••••••••',
                         hintStyle: const TextStyle(color: Color(0xFFAAAAAA)),
-                        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFFAAAAAA)),
+                        prefixIcon:
+                            const Icon(Icons.lock_outline, color: Color(0xFFAAAAAA)),
                         suffixIcon: IconButton(
-                          icon: Icon(_obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined, color: const Color(0xFFAAAAAA)),
-                          onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: const Color(0xFFAAAAAA),
+                          ),
+                          onPressed: () =>
+                              setState(() => _obscurePassword = !_obscurePassword),
                         ),
                         filled: true,
                         fillColor: Colors.white,
@@ -200,33 +191,45 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             Checkbox(
                               value: _rememberMe,
-                              onChanged: (v) => setState(() => _rememberMe = v ?? false),
+                              onChanged: (v) =>
+                                  setState(() => _rememberMe = v ?? false),
                               activeColor: _brandRed,
                             ),
-                            const Text('Remember me', style: TextStyle(fontSize: 14, color: Color(0xFF222222))),
+                            const Text('Remember me',
+                                style:
+                                    TextStyle(fontSize: 14, color: Color(0xFF222222))),
                           ],
                         ),
                         TextButton(
                           onPressed: () {},
-                          child: Text('Forgot password?', style: TextStyle(color: _brandRed, fontWeight: FontWeight.w600)),
+                          child: Text('Forgot password?',
+                              style: TextStyle(
+                                  color: _brandRed, fontWeight: FontWeight.w600)),
                         ),
                       ],
                     ),
 
                     const SizedBox(height: 18),
 
-                    // SIGN IN BUTTON
+                    /// SIGN IN BUTTON
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _login,
+                        onPressed: _isLoading ? null : _login,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _brandRed,
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                           elevation: 0,
                         ),
-                        child: const Text('Sign In', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text('Sign In',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600)),
                       ),
                     ),
 
@@ -238,7 +241,8 @@ class _LoginPageState extends State<LoginPage> {
                         Expanded(child: Divider(color: Colors.grey.shade300)),
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12),
-                          child: Text('Or continue with', style: TextStyle(color: Color(0xFF999999))),
+                          child: Text('Or continue with',
+                              style: TextStyle(color: Color(0xFF999999))),
                         ),
                         Expanded(child: Divider(color: Colors.grey.shade300)),
                       ],
@@ -253,16 +257,21 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 12),
-                          side: BorderSide(color: Colors.grey.shade300, width: 1),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          side:
+                              BorderSide(color: Colors.grey.shade300, width: 1),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                           backgroundColor: Colors.white,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Icon(Icons.account_circle_outlined, color: Color(0xFF222222)),
+                            Icon(Icons.account_circle_outlined,
+                                color: Color(0xFF222222)),
                             SizedBox(width: 8),
-                            Text('Continue with Google', style: TextStyle(color: Color(0xFF222222), fontSize: 14)),
+                            Text('Continue with Google',
+                                style:
+                                    TextStyle(color: Color(0xFF222222), fontSize: 14)),
                           ],
                         ),
                       ),
@@ -274,13 +283,22 @@ class _LoginPageState extends State<LoginPage> {
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const SignupPage()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const SignupPage()));
                         },
                         child: RichText(
                           text: TextSpan(
                             children: [
-                              const TextSpan(text: "Don't have an account? ", style: TextStyle(color: Color(0xFF222222))),
-                              TextSpan(text: 'Sign up here', style: TextStyle(color: _brandRed, fontWeight: FontWeight.w600)),
+                              const TextSpan(
+                                  text: "Don't have an account? ",
+                                  style: TextStyle(color: Color(0xFF222222))),
+                              TextSpan(
+                                  text: 'Sign up here',
+                                  style: TextStyle(
+                                      color: _brandRed,
+                                      fontWeight: FontWeight.w600)),
                             ],
                           ),
                         ),
