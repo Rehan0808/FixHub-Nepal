@@ -8,12 +8,14 @@ class HiveService {
   HiveService._internal();
 
   Box<AuthHiveModel>? _userBox;
+  Box? _profileBox;
 
   
   Future<void> init() async {
     await Hive.initFlutter();
     Hive.registerAdapter(AuthHiveModelAdapter());
     _userBox = await Hive.openBox<AuthHiveModel>('users');
+    _profileBox = await Hive.openBox('profile');
   }
 
  
@@ -22,5 +24,12 @@ class HiveService {
       throw Exception("Hive box is not initialized. Call init() first.");
     }
     return _userBox!;
+  }
+
+  Box get profileBox {
+    if (_profileBox == null) {
+      throw Exception("Hive profile box is not initialized. Call init() first.");
+    }
+    return _profileBox!;
   }
 }
