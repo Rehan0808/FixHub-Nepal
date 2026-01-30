@@ -98,7 +98,7 @@ class _SignupPageState extends State<SignupPage> {
                         width: 55,
                         height: 55,
                         child: Image.asset(
-                          'assets/images/logo.png',
+                          'images/logo.png',
                           fit: BoxFit.contain,
                           errorBuilder: (_, __, ___) =>
                               Icon(Icons.build, size: 55, color: _brandRed),

@@ -37,7 +37,7 @@ class _SplashPageState extends State<SplashPage> {
                 width: 92,
                 height: 92,
                 child: Image.asset(
-                  'assets/images/logo.png',
+                  'images/logo.png',
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
                     return Icon(

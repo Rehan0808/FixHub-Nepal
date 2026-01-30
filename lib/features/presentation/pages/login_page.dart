@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                             width: 50,
                             height: 50,
                             child: Image.asset(
-                              'assets/images/logo.png',
+                              'images/logo.png',
                               fit: BoxFit.contain,
                               errorBuilder: (_, __, ___) => Icon(
                                 Icons.build,

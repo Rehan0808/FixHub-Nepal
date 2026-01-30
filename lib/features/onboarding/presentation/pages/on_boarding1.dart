@@ -24,7 +24,7 @@ child: SizedBox(
 width: 140,
 height: 140,
 child: Image.asset(
-'assets/images/logo.png',
+'images/logo.png',
 fit: BoxFit.contain,
 errorBuilder: (context, error, stackTrace) {
 return const Icon(Icons.build, size: 140, color: Colors.red);
