@@ -13,7 +13,19 @@ class HiveService {
   
   Future<void> init() async {
     await Hive.initFlutter();
-    Hive.registerAdapter(AuthHiveModelAdapter());
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter(AuthHiveModelAdapter());
+    }
+    _userBox = await Hive.openBox<AuthHiveModel>('users');
+    _profileBox = await Hive.openBox('profile');
+  }
+
+  /// For unit tests only — avoids Flutter platform-channel dependency.
+  Future<void> initForTest(String dirPath) async {
+    Hive.init(dirPath);
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter(AuthHiveModelAdapter());
+    }
     _userBox = await Hive.openBox<AuthHiveModel>('users');
     _profileBox = await Hive.openBox('profile');
   }
