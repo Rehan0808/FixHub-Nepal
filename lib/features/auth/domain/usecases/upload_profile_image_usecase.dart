@@ -7,7 +7,7 @@ class UploadProfileImageUseCase {
 
   UploadProfileImageUseCase(this.repository);
 
-  Future<UserProfileEntity> execute(XFile imagePath) {
-    return repository.uploadProfileImage(imagePath);
+  Future<UserProfileEntity> execute(XFile imagePath, String token) {
+    return repository.uploadProfileImage(imagePath, token);
   }
 }
