@@ -11,6 +11,7 @@ import '../../../features/auth/domain/usecases/login_usecase.dart';
 import '../../../features/auth/domain/usecases/signup_usecase.dart';
 import '../../../features/presentation/pages/login_page.dart';
 import '../../../features/dashboard/presentation/pages/main_screen.dart';
+import '../../../core/services/hive_services.dart';
 // import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 // import 'package:uuid/uuid.dart';
@@ -19,15 +20,11 @@ import '../../../features/dashboard/presentation/pages/main_screen.dart';
 // import '../../domain/entities/auth_entity.dart';
 // import '../controllers/auth_controller.dart';
 
-
 class AuthController {
   final LoginUseCase loginUseCase;
   final SignUpUseCase signUpUseCase;
 
-  AuthController({
-    required this.loginUseCase,
-    required this.signUpUseCase,
-  });
+  AuthController({required this.loginUseCase, required this.signUpUseCase});
 
   /// 🔹 LOGIN
   Future<void> login({
@@ -36,9 +33,24 @@ class AuthController {
     required String password,
   }) async {
     try {
-      final user = await loginUseCase.execute(email, password);
+      final response = await loginUseCase.execute(email, password);
+      final user = response['user'] as AuthEntity?;
+      final token = response['token'] as String?;
 
-      if (user != null) {
+      if (user != null && token != null) {
+        // Save user data and token to Hive
+        final profileBox = HiveService().profileBox;
+        await profileBox.put(
+          'userName',
+          '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim(),
+        );
+        await profileBox.put('userEmail', user.email);
+        await profileBox.put('userPhone', user.phone ?? '');
+        await profileBox.put('userAddress', user.address ?? '');
+
+        // ⚠️ CRITICAL: Save authentication token
+        await profileBox.put('authToken', token);
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Login successful"),
