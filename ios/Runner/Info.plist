@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>FixHub Nepal needs your location to set pickup and dropoff addresses for the Pick &amp; Drop service.</string>
 </dict>
 </plist>
