@@ -9,8 +9,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ProfileRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<UserProfileEntity> uploadProfileImage(XFile imagePath) async {
-    final imageUrl = await remoteDataSource.uploadProfileImage(imagePath);
+  Future<UserProfileEntity> uploadProfileImage(XFile imagePath, String token) async {
+    final imageUrl = await remoteDataSource.uploadProfileImage(imagePath, token);
     return UserProfileEntity(imageUrl: imageUrl);
   }
 }

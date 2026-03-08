@@ -20,24 +20,39 @@ class AuthRepositoryImpl implements AuthRepository {
       phone: user.phone,
       address: user.address,
     );
-
     await remoteDataSource.signup(model);
   }
 
   /// 🔹 LOGIN USING API
   @override
-  Future<AuthEntity?> login(String email, String password) async {
-    final AuthModel userModel =
-        await remoteDataSource.login(email, password);
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    final response = await remoteDataSource.login(email, password);
+    final userJson = response['user'];
+    final token = response['token'];
+    final userModel = AuthModel.fromJson(userJson);
+    return {
+      'user': AuthEntity(
+        id: userModel.id,
+        email: userModel.email,
+        password: password,
+        firstName: userModel.firstName,
+        lastName: userModel.lastName,
+        phone: userModel.phone,
+        address: userModel.address,
+      ),
+      'token': token,
+    };
+  }
 
-    return AuthEntity(
-      id: userModel.id,
-      email: userModel.email,
-      password: password,
-      firstName: userModel.firstName,
-      lastName: userModel.lastName,
-      phone: userModel.phone,
-      address: userModel.address,
-    );
+  /// 🔹 SEND RESET OTP (MOBILE)
+  @override
+  Future<void> sendResetOtp(String email) async {
+    await remoteDataSource.sendResetOtp(email);
+  }
+
+  /// 🔹 RESET PASSWORD WITH OTP (MOBILE)
+  @override
+  Future<void> resetPasswordWithOtp(String email, String otp, String newPassword) async {
+    await remoteDataSource.resetPasswordWithOtp(email, otp, newPassword);
   }
 }
